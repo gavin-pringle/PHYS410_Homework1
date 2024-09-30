@@ -37,7 +37,7 @@ function example_dfdx_out = example_dfdx(x)
 end
 
 % Root finding
-roots = ones([1,10]);
+roots = zeros([1,10]);
 
 BS_tol = 1.0e-2;
 NM_tol = 1.0e-12;
@@ -53,16 +53,23 @@ roots(8) = hybrid(@example_f, @example_dfdx, 1.86, 1.90, BS_tol, NM_tol);
 roots(9) = hybrid(@example_f, @example_dfdx, 1.4, 1.5, BS_tol, NM_tol);
 roots(10) = hybrid(@example_f, @example_dfdx, 1.98, 2.0, BS_tol, NM_tol);
 
+function_at_roots = transpose(arrayfun(@example_f, roots))
+
 % Plotting
 xvec = linspace(0,2,10000);
 
 fig = figure;
-plot(xvec, arrayfun(@example_f, xvec), 'LineWidth', 1);
-for i = 1:length(roots)
-    xline(roots(i), 'LineWidth', 1);
-end
-yline(0, 'LineWidth', 1);
-grid on
+plot(xvec, arrayfun(@example_f, xvec), 'LineWidth', 1, 'DisplayName', 'f(x)');
+hold on;
+scatter(roots, zeros([1,10]), 'filled', 'DisplayName', 'Calculated roots', 'Color', 'r');
+lgd = legend;
+ax = gca;
+fontsize(lgd,12,'points');
+fontsize(ax,12,'points');
+title('Bisection and Newton''s Method Hybrid Algorithm Results', 'FontSize', 16);
+xlabel('x');
+ylabel('y');
+grid on;
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Test Script - Problem 2
@@ -113,6 +120,6 @@ end
 initial_guess = [-1.0; 0.75; 1.50];
 NM_3D_tol = 1.0e-6;
 
-roots = newtond(@example_sys, @example_jac, initial_guess, NM_3D_tol)
+solution = newtond(@example_sys, @example_jac, initial_guess, NM_3D_tol);
 
-disp(example_sys(roots));
+system_at_solution = example_sys(solution)

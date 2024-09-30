@@ -47,5 +47,4 @@ function x = hybrid(f, dfdx, xmin, xmax, tol1, tol2)
         xprev = x;
     end
 
-    disp(x)
 end
