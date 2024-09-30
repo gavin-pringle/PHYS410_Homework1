@@ -39,7 +39,7 @@ end
 % Root finding
 roots = zeros([1,10]);
 
-BS_tol = 1.0e-2;
+BS_tol = 1.0e-4;
 NM_tol = 1.0e-12;
 
 roots(1) = hybrid(@example_f, @example_dfdx, 0.0, 0.04, BS_tol, NM_tol);
@@ -118,7 +118,7 @@ end
 
 % Root finding
 initial_guess = [-1.0; 0.75; 1.50];
-NM_3D_tol = 1.0e-6;
+NM_3D_tol = 1.0e-12;
 
 solution = newtond(@example_sys, @example_jac, initial_guess, NM_3D_tol);
 

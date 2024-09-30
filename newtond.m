@@ -1,7 +1,8 @@
 %% Problem 2 - D-dimensional Newton iteration
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% Newton's method for a d-dimensional space.
+% Newton's method for a d-dimensional space. If the number of 
+% iterations exceeds 50, the function returns NaN.
 %
 % Arguments:
 %  f:   Function which implements the nonlinear system of 
@@ -20,6 +21,9 @@
 %  x:   Estimate of root (length-d column vector).
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function x = newtond(f, jac, x0, tol)
+    overflow_counter = 0;
+    MAX_ITERATIONS = 50;
+
     x = x0;
     res = f(x0);
     dx = jac(x0)\res;
@@ -27,5 +31,11 @@ function x = newtond(f, jac, x0, tol)
         res = f(x);
         dx = jac(x)\res;
         x = x - dx;
+
+        overflow_counter = overflow_counter + 1;
+        if overflow_counter == MAX_ITERATIONS
+            x = NaN;
+            return;
+        end 
     end 
 end

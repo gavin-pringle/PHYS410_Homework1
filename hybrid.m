@@ -2,7 +2,9 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % A hybrid algorithm that uses bisection and Newton's method
-% to locate a root within a given interval [xmin, xmax]. 
+% to locate a root within a given interval [xmin, xmax]. If the 
+% number of iterations exceeds for either bisection or Newton's
+% method returns 50, the function returns NaN.
 %
 % Arguments:
 %  f:      Function whose root is sought (takes one argument).
@@ -15,6 +17,9 @@
 %  x:      Estimate of root.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 function x = hybrid(f, dfdx, xmin, xmax, tol1, tol2)
+    overflow_counter = 0;
+    MAX_ITERATIONS = 50;
+
     % Bisection:
     converged = false;
     fmin = f(xmin);
@@ -32,8 +37,16 @@ function x = hybrid(f, dfdx, xmin, xmax, tol1, tol2)
         if (xmax - xmin)/abs(xmid) < tol1
             converged = true;
         end 
+
+        overflow_counter = overflow_counter + 1;
+        if overflow_counter == MAX_ITERATIONS
+            x = NaN;
+            return;
+        end 
     end
     bisection_result = xmid;
+
+    overflow_counter = 0;
 
     % Newton's method:
     converged = false;
@@ -45,6 +58,12 @@ function x = hybrid(f, dfdx, xmin, xmax, tol1, tol2)
             converged = true;
         end
         xprev = x;
+
+        overflow_counter = overflow_counter + 1;
+        if overflow_counter == MAX_ITERATIONS
+            x = NaN;
+            return;
+        end 
     end
 
 end
