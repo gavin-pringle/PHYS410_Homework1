@@ -20,6 +20,8 @@
 \usepackage{graphicx}
 \graphicspath{{../writeup/}}
 
+\def\code#1{\texttt{#1}}
+
 \title{PHYS 410 Homework 1}
 \author{Gavin Pringle, 56401938}
 
@@ -71,7 +73,7 @@ for the second question.
 
 \subsubsection*{Review of Theory}
 
-Bisection, also referred to as binary search, is a method used for solving nonlinear equations of the 
+\textbf{Bisection}, also referred to as binary search, is a method used for solving nonlinear equations of the 
 form $f(x)=0$ for the 1-dimensional case or $\vec{f}(\vec{x})=\vec{0}$ for the d-dimensional case. The
 bisection algorithm involves bisecting a search interval and checking whether the root is above or 
 below the bisector. The search interval is then bisected again in the new interval where the root lies, 
@@ -85,33 +87,72 @@ successively divided into smaller intervals of width $\delta x_1 = \delta x_0/2$
 $\delta x_2 = \delta x_0/4$, $\delta x_3 = \delta x_0/8$, \ldots each of contains the root which is 
 checked using the condition $f({x_{min}}^{(n)})f({x_{max}}^{(n)}) \leq 0$. This process is continued until 
 interval is suitably small, which is verified by checking the relative error given by the formula
-$\frac{| \delta x^{(n)} |}{| x^{(n+1)} |} \leq \epsilon$
+$\frac{| \delta x^{(n)} |}{| x^{(n+1)} |} \leq \epsilon$.
 
-Newton's method is another 
+\textbf{Newton's method} is another method used for solving nonlinear equations of the form $f(x)=0$ for the 
+1-dimensional case or $\vec{f}(\vec{x})=\vec{0}$ for the d-dimensional case. Newton's method does not 
+require an interval wherein the root lies but rather a "good" initial guess as to where the root is near.
+Whether or not the guess is "good" depends on the specific problem at hand.
+
+In Newton's method, we let $x^*$ be a root of $f(x)$. From the Taylor expansion,
+$$0 \approx f(x^{(n)}) + (x^* - x^{(n)})f'(x^{(n)})$$
+Letting $x^{(n+1)} = x^*$, we can rearrange to get
+$$x^{(n+1)} = x^{(n)} - \frac{f(x^{(n)})}{f'(x^{(n)})}$$
+For the 1-dimensional Newton's method algorithm, the above equation can be successively applied to yield a 
+closer and closer approximation to the true $x^*$. The process can again be stopped when a suitable precision
+is achieved, calculated using the formula 
+$$\frac{| \delta x^{(n)} |}{| x^{(n+1)} |} = \frac{| x^{(n+1)}-x^{(n)} |}{| x^{(n+1)} |} \leq \epsilon$$
 
 \subsubsection*{Numerical Approach}
 
-definition of all pertinent problem parameters
+Both of the 1-dimensional bisection algorithm and 1-dimensional Newton's method are used in this problem to 
+create a hybrid algorithm that first employs bisection to an intermediate tolerance followed by Newton's method to
+a final tolerance in order to find the root of an arbitrary function was in the interval $[x_{min}, x_{max}]$.
+The algorithm was implemented as a function (as per the homework instructions):
+\begin{verbatim}
+function x = hybrid(f, dfdx, xmin, xmax, tol1, tol2)
+\end{verbatim}
+where \code{x} is the returned value of the calculated root, \code{f} is the function for which the location
+of the root is sought, \code{dfdx} is the derivative of said function, \code{xmin} is the initial interval 
+minimum, \code{xmax} is the initial interval maximum, \code{tol1} is the relative convergence criterion for
+bisection, and \code{tol2} is the relative convergence criterion for Newton iteration.
 
-exposition of the requisite equations
-
-methodology that is used to solve the problem
-
-function signature 
-
-testing method 
-
-provided equations
+In order to test the function \code{hybrid(f, dfdx, xmin, xmax, tol1, tol2)}, the polynomial 
+$$f(x) = 512x^{10}-5120x^9 + 21760x^8-51200x^7 + 72800x^6-64064x^5 + 34320x^4-10560x^3 + 1650x^2-100x + 1$$
+and its derivative were both implemented as Matlab functions to pass as parameters. The online graphing 
+calculator Desmos was used to graph the function in order to see where the roots are in order to find intervals
+for each root of $f(x)$ in the interval $[0,2]$. For testing purposes \code{tol1} was set to $10^{-4}$ and 
+\code{tol2} was set to $10^{-12}$ as per the homework instructions on relative precision. Refer to Appendix C 
+for the testing Matlab script. 
 
 \subsubsection*{Implementation}
 
-refer to appendix 
+The function \code{hybrid(f, dfdx, xmin, xmax, tol1, tol2)} first employs bisection via a while loop to a 
+precision of \code{tol1}. The middle of the final bisection interval is passed as the starting point for the 
+Newton's method algorithm which then computes the root to a precision of \code{tol2} via another while loop. 
+A loop iteration counter is utilized for both the bisection and Newton's method loops that causes the function
+to immediately return \code{NaN} if either loop exceed 50 iterations.
 
-iteration counter
+Refer to Appendix A for the full Matlab script.
 
 \subsubsection*{Results}
 
-graph and console output 
+Using the script \code{test.m} shown in Appendix C, the roots of $f(x)$ were computed using the hybrid algorithm
+as 
+\begin{verbatim}
+roots(1) = 0.012311659404862
+roots(2) = 0.108993475811632
+roots(3) = 0.292893218813451
+roots(4) = 0.546009500260433 
+roots(5) = 0.843565534960010 
+roots(6) = 1.156434465041807
+roots(7) = 1.707106781182998
+roots(8) = 1.891006524189957
+roots(9) = 1.453990499747037
+roots(10) = 1.987688340584366
+\end{verbatim}
+
+Plugging these calculated roots into the original function 
 
 \begin{figure}[h!]
 \centering

@@ -53,6 +53,10 @@ roots(8) = hybrid(@example_f, @example_dfdx, 1.86, 1.90, BS_tol, NM_tol);
 roots(9) = hybrid(@example_f, @example_dfdx, 1.4, 1.5, BS_tol, NM_tol);
 roots(10) = hybrid(@example_f, @example_dfdx, 1.98, 2.0, BS_tol, NM_tol);
 
+for i = 1:10
+    fprintf('roots(%d) = %.12f \n',i, roots(i));
+end
+
 function_at_roots = transpose(arrayfun(@example_f, roots))
 
 % Plotting
@@ -121,5 +125,9 @@ initial_guess = [-1.0; 0.75; 1.50];
 NM_3D_tol = 1.0e-12;
 
 solution = newtond(@example_sys, @example_jac, initial_guess, NM_3D_tol);
+
+fprintf('x = %.12f \n', solution(1));
+fprintf('y = %.12f \n', solution(2));
+fprintf('z = %.12f \n', solution(3));
 
 system_at_solution = example_sys(solution)
