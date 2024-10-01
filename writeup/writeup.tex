@@ -74,7 +74,7 @@ for the second question.
 \subsubsection*{Review of Theory}
 
 \textbf{Bisection}, also referred to as binary search, is a method used for solving nonlinear equations of the 
-form $f(x)=0$ for the 1-dimensional case or $\vec{f}(\vec{x})=\vec{0}$ for the d-dimensional case. The
+form $f(x)=0$ for the 1-dimensional case or $\mathbf{f}(\mathbf{x})=\mathbf{0}$ for the d-dimensional case. The
 bisection algorithm involves bisecting a search interval and checking whether the root is above or 
 below the bisector. The search interval is then bisected again in the new interval where the root lies, 
 and again it is determined whether the root is above or below the new bisector. This process then repeats
@@ -140,19 +140,39 @@ Refer to Appendix A for the full Matlab script.
 Using the script \code{test.m} shown in Appendix C, the roots of $f(x)$ were computed using the hybrid algorithm
 as 
 \begin{verbatim}
-roots(1) = 0.012311659404862
-roots(2) = 0.108993475811632
-roots(3) = 0.292893218813451
-roots(4) = 0.546009500260433 
-roots(5) = 0.843565534960010 
-roots(6) = 1.156434465041807
-roots(7) = 1.707106781182998
-roots(8) = 1.891006524189957
-roots(9) = 1.453990499747037
-roots(10) = 1.987688340584366
+roots(1) = 0.012311659405
+roots(2) = 0.108993475812
+roots(3) = 0.292893218813
+roots(4) = 0.546009500260
+roots(5) = 0.843565534960
+roots(6) = 1.156434465042
+roots(7) = 1.707106781183
+roots(8) = 1.891006524190
+roots(9) = 1.453990499747
+roots(10) = 1.987688340584
 \end{verbatim}
 
-Plugging these calculated roots into the original function 
+Plugging these calculated roots into the original function we get the following output for $f(x)$ evaluated at the 
+numerically computed roots, and we can confirm that they are all approximately zero to the desired relative 
+precision:
+
+\begin{verbatim}
+function_at_roots =
+
+    1.0e-08 *
+                    0
+   -0.000000177635684
+                    0
+   -0.000075317529991
+   -0.000821387402539
+    0.003998934516858
+   -0.012423129192030
+    0.074888362178172
+   -0.004718003765447
+   -0.112436282506678
+\end{verbatim}
+
+Plotting the numerically computed roots on top of the function $f(x)$, we can again confirm they are accurate.
 
 \begin{figure}[h!]
 \centering
@@ -168,7 +188,34 @@ Plugging these calculated roots into the original function
 \subsection*{Problem 2 - D-dimesional Newton's Method}
 
 \subsubsection*{Review of Theory}
-Go over theory for d-d newton's method: 
+Newton's method in d-dimensions follows the same process as Newton's method in one dimension, however 
+the derivative $f'(x)$ is replaced with the Jacobian matrix of $\mathbf{f}(\mathbf{x})$. In order to 
+solve $\mathbf{f}(\mathbf{x})=\mathbf{0}$, the multivariate Taylor series expansion is used:
+$$\mathbf{0} \approx \mathbf{f}(\mathbf{x}^{(n)}) + \mathbf{J}[\mathbf{x}^{(n)}](\mathbf{x}^* -
+\mathbf{x}^{(n)})$$
+
+where
+
+\[
+\mathbf{J}_{i,j} =
+\begin{bmatrix}
+  \frac{\partial f_1}{\partial x_1} & 
+    \frac{\partial f_1}{\partial x_2} & 
+    \frac{\partial f_1}{\partial x_3} \\[1ex] % <-- 1ex more space between rows of matrix
+  \frac{\partial f_2}{\partial x_1} & 
+    \frac{\partial f_2}{\partial x_2} & 
+    \frac{\partial f_2}{\partial x_3} \\[1ex]
+  \frac{\partial f_3}{\partial x_1} & 
+    \frac{\partial f_3}{\partial x_2} & 
+    \frac{\partial f_3}{\partial x_3}
+\end{bmatrix}
+\]
+
+Replacing $\mathbf{x}^*$ with $\mathbf{x}^{(n+1)}$:
+$$\mathbf{0} \approx \mathbf{f}(\mathbf{x}^{(n)}) + \mathbf{J}[\mathbf{x}^{(n)}](\mathbf{x}^{(n+1)} -
+\mathbf{x}^{(n)})$$
+
+
 
 \subsubsection*{Numerical approach}
 
