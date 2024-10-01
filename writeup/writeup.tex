@@ -22,6 +22,8 @@
 
 \def\code#1{\texttt{#1}}
 
+\usepackage[colorlinks=true, urlcolor=blue, linkcolor=red]{hyperref}
+
 \title{PHYS 410 Homework 1}
 \author{Gavin Pringle, 56401938}
 
@@ -53,6 +55,7 @@
 % Introduction
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \subsection*{Introduction}
+
 In this homework assignment, two methods for solving nonlinear equations numerically via root finding 
 are explored: bisection and Newton's method. In order to do this, two problems are provided. The first 
 problem involves the 1-dimesional case where the roots of a nonlinear function are found using a hybrid 
@@ -123,7 +126,7 @@ and its derivative were both implemented as Matlab functions to pass as paramete
 calculator Desmos was used to graph the function in order to see where the roots are in order to find intervals
 for each root of $f(x)$ in the interval $[0,2]$. For testing purposes \code{tol1} was set to $10^{-4}$ and 
 \code{tol2} was set to $10^{-12}$ as per the homework instructions on relative precision. Refer to Appendix C 
-for the testing Matlab script. 
+for the full Matlab test script. 
 
 \subsubsection*{Implementation}
 
@@ -188,6 +191,7 @@ Plotting the numerically computed roots on top of the function $f(x)$, we can ag
 \subsection*{Problem 2 - D-dimesional Newton's Method}
 
 \subsubsection*{Review of Theory}
+
 Newton's method in d-dimensions follows the same process as Newton's method in one dimension, however 
 the derivative $f'(x)$ is replaced with the Jacobian matrix of $\mathbf{f}(\mathbf{x})$. In order to 
 solve $\mathbf{f}(\mathbf{x})=\mathbf{0}$, the multivariate Taylor series expansion is used:
@@ -215,21 +219,35 @@ Replacing $\mathbf{x}^*$ with $\mathbf{x}^{(n+1)}$:
 $$\mathbf{0} \approx \mathbf{f}(\mathbf{x}^{(n)}) + \mathbf{J}[\mathbf{x}^{(n)}](\mathbf{x}^{(n+1)} -
 \mathbf{x}^{(n)})$$
 
+An update vector is defined to be $\mathbf{\delta x^{(n)}} = -(\mathbf{x}^{(n+1)}-\mathbf{x}^{(n)})$ that
+satisfies the linear system 
+$$\mathbf{J}[\mathbf{x}^{(n)}]\mathbf{\delta x^{(n)}} = \mathbf{f}(\mathbf{x}^{(n)})$$
 
+The d-dimensional Newton's method can be iterated until the update vector $\mathbf{\delta x^{(n)}}$ has 
+been reduced to a suitably chosen relative precision. 
 
 \subsubsection*{Numerical approach}
 
-definition of all pertinent problem parameters
+The d-dimensional Newton's method algorithm was implemented as a function (as per the homework instructions):
+\begin{verbatim}
+function x = newtond(f, jac, x0, tol)
+\end{verbatim}
+where \code{x} is the estimate of the root, \code{f} is the function which implements the nonlinear system of 
+equations, \code{jac} is the Jacobian of the nonlinear system, \code{x0} is the initial estimate for the Newton
+iteration, and \code{tol} is convergence criterion for the relative magnitude of the update vector.
 
-exposition of the requisite equations
+In order to test the function the following nonlinear system was provided: 
+$$x^2+y^4+z^6=2$$
+$$\cos{xyz^2}=x+y+z$$
+$$y^2+z^3=(x+y-z)^2$$
+Putting this into standard form:
+$$f_1(\mathbf{x})=x^2+y^4+z^6-2$$
+$$f_2(\mathbf{x})=\cos{xyz^2}-x+y+z$$
+$$f_3(\mathbf{x})=y^2+z^3-(x+y-z)^2$$
 
-methodology that is used to solve the problem
-
-function signature 
-
-testing method 
-
-provided equations
+A function in \code{test.m} implemented these equations to be passed as \code{f} to the function \code{newtond}.
+The Jacobian was calculated using and online
+\href{https://www.emathhelp.net/en/calculators/calculus-3/jacobian-calculator/}{Jacobian calculator} as:
 
 \begin{figure}[h!]
 \centering
@@ -237,11 +255,16 @@ provided equations
 \caption{Calculated Jacobian matrix for the provided system of equations.}
 \end{figure}
 
+This Jacbian was implemented as another function in \code{test.m} to be passed as \code{jac} to the function 
+\code{newtond}.
+
+Refer to Appendix C for the full Matlab test script. 
+
 \subsubsection*{Implementation}
 
-refer to appendix 
 
-iteration counter
+
+Refer to Appendix B for the full Matlab script.
 
 \subsubsection*{Results}
 
